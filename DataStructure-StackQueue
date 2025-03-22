@@ -1,0 +1,92 @@
+#include <iostream>
+#include <vector>
+#include <string> 
+
+using namespace std; 
+
+class DataStructure {
+    protected:
+    vector <string> container;
+
+    public: 
+    virtual void push (string s ) = 0; 
+    virtual string pop () = 0; 
+    virtual bool isEmpty () const {
+        return container.empty(); 
+    }
+
+    friend ostream& operator << (ostream& os, DataStructure& ds);
+
+};
+// Operator overloading for output streaming effortlessly 
+ostream& operator << (ostream& os, DataStructure& ds){
+    os << "[";
+    for (size_t i = 0; i < ds.container.size(); ++i){
+        os<<ds.container[i];
+        if (i!=ds.container.size()-1) os << ",";
+    }
+    os << "]";
+}
+
+class Stack : public DataStructure {
+    public: 
+    void push (string s ) override {
+        container.push_back(s);
+    }
+    string pop () override {
+        if (isEmpty()){
+            throw out_of_range ("Stack is empty! ");
+        }
+        string mem = container.back();
+        container.pop_back();
+        return mem; 
+    }
+    //overload the operator += 
+    Stack& operator += (string s) {
+        push(s);
+        return *this; 
+    }
+
+}; 
+
+//Queue class
+class Queue : public DataStructure {
+    public:
+    void push (string s) override {
+        container.push_back(s);
+    }
+    string pop () override {
+        if (isEmpty()){
+            throw out_of_range ("Stack is empty");
+        }
+        string mem = container.front();
+        container.erase(container.begin());
+        return mem; 
+    }
+    //operator overloading 
+    Queue& operator += (string s) {
+        push(s);
+        return *this;
+    }
+};
+
+int main(){
+    Stack myStack;
+    myStack.push("Kim");
+    myStack += "Dennis";
+    myStack += "Kelvin" ; 
+    cout << "Satck list: " << myStack << endl;
+    cout << "Pop from stack: " << myStack.pop() << endl; 
+    cout << "Stack after pop: " << myStack << endl; 
+    
+    cout << endl; 
+
+    Queue myQueque; 
+    myQueque.push("H");
+    myQueque += "O";
+    myQueque += "E";
+    cout << "Queue list: " << myQueque << endl;
+    cout << "Pop from queue: " << myQueque.pop() << endl; 
+    cout << "Queue after: " << myQueque << endl;  
+    return 0; 
+}
